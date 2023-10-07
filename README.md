@@ -7,4 +7,5 @@
 ![QQ图片20230928133913](https://github.com/hakuto2003/Suudoku/assets/139118149/ce8ccada-674e-4b6a-af5a-9cc616ea27f6)
 点击生成按钮，会清空当前的棋盘，并重新并发生成九个新的不同的数独棋盘，如下图所示
 ![QQ图片20230928133817](https://github.com/hakuto2003/Suudoku/assets/139118149/0b6855a9-9605-4e6c-a7a2-89d546e747e5)
-检查按钮和键盘输入的功能还没有完成编写，有待完善
+点击生成题解，会并发生成九个数独棋盘的题解
+![Uploading 2700f719a5004f9d8445573d969f0218.png…]()
