@@ -142,7 +142,24 @@ protected:
         randomRemoveNumbers(sudoku, randomGenerator.bounded(30, 70)); // 使用bounded函数生成随机数
     }
 };
+void solveSudoku(int sudoku[9][9]) {
+    // 创建原数独的副本
+    int solvedSudoku[9][9];
+    for (int i = 0; i < 9; ++i) {
+        for (int j = 0; j < 9; ++j) {
+            solvedSudoku[i][j] = sudoku[i][j];
+        }
+    }
 
+    if (dfs(solvedSudoku, 0)) {
+        // 如果找到解决方案，则将解应用于原始数独网格
+        for (int i = 0; i < 9; ++i) {
+            for (int j = 0; j < 9; ++j) {
+                sudoku[i][j] = solvedSudoku[i][j];
+            }
+        }
+    }
+}
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
@@ -155,8 +172,10 @@ int main(int argc, char *argv[]) {
     QVBoxLayout *leftLayout = new QVBoxLayout;
     QPushButton *generateButton = new QPushButton("生成");
     QPushButton *checkButton = new QPushButton("检查");
+    QPushButton *solveButton = new QPushButton("显示题解");
     leftLayout->addWidget(generateButton);
     leftLayout->addWidget(checkButton);
+    leftLayout->addWidget(solveButton);
 
     QGridLayout *rightLayout = new QGridLayout;
     QList<QTableWidget*> sudokuGrids;
@@ -205,7 +224,30 @@ int main(int argc, char *argv[]) {
             futures[i].waitForFinished();
         }
     });
-
+    QObject::connect(solveButton, &QPushButton::clicked, [&threads, &sudokuGrids]() {
+    for (int i = 0; i < 9; ++i) {
+        QTableWidget *sudokuGrid = sudokuGrids[i];
+        for (int row = 0; row < SudokuSize; ++row) {
+            for (int col = 0; col < SudokuSize; ++col) {
+                QTableWidgetItem *item = sudokuGrid->item(row, col);
+                if (item) {
+                    item->setText(""); // 清除已有的文本
+                }
+            }
+        }
+        solveSudoku(threads[i].sudoku);
+        for (int row = 0; row < SudokuSize; ++row) {
+            for (int col = 0; col < SudokuSize; ++col) {
+                int value = threads[i].sudoku[row][col];
+                QTableWidgetItem *item = new QTableWidgetItem();
+                if (value != 0) {
+                    item->setText(QString::number(value));
+                }
+                sudokuGrid->setItem(row, col, item);
+            }
+        }
+    }
+});
     mainLayout->addLayout(leftLayout);
     mainLayout->addLayout(rightLayout);
 
